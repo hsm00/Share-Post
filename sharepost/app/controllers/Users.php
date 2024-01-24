@@ -1,6 +1,11 @@
 <?php
 class Users extends Controller
 {
+    /**
+     * @var mixed
+     */
+    private $userModel;
+
     public function __construct()
     {
         $this->userModel = $this->model('User');

@@ -14,14 +14,15 @@
 
             $url = $this->getUrl();
 
-            // Look in controllers for first value
-            if(file_exists('../app/controllers/' . ucwords($url[0]). '.php')) {
+            // Check if $url[0] is set and Look in controllers for first value
+            if(isset($url[0]) && file_exists('../app/controllers/' . ucwords($url[0]). '.php')) {
                 //If exists, set as controller
                 $this->currentController = ucwords($url[0]);
                 //Unset 0 Index
-                unset($url[0]);
-            }
 
+                unset($url[0]);
+            } else {
+            }
             // Require the controller
             require_once '../app/controllers/'. $this->currentController . '.php';
 
@@ -43,7 +44,12 @@
             $this->params = $url ? array_values($url) : [];
 
             // Call a callback with array of params
-            call_user_func_array([$this->currentController, $this->currentMethod], $this->params);
+            try {
+                // Call a callback with array of params
+                call_user_func_array([$this->currentController, $this->currentMethod], $this->params);
+            } catch (Exception $e) {
+                echo 'Error: ' . $e->getMessage();
+            }
         }
 
         public function getUrl(){
@@ -56,5 +62,6 @@
 
             }
         }
+
     }
 
